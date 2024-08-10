@@ -14,7 +14,7 @@ Nome da clínica:
 
 Colocar aqui o diagrama de banco...
 
-![]()
+![imagem de exemplo](https://github.com/monteiro74/nome_sobrenome2/blob/main/imagens/ER_Diagram_MMORPG.png?raw=true)
 
 # 3. Diagrama de casos de uso
 
