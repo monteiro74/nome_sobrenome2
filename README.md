@@ -41,7 +41,106 @@ Nome da clínica: cachorro amarelo.
 # 2. Diagrama do banco de dados
 
 
+```mermaid
 
+erDiagram
+    CLIENTE {
+        int id_cliente PK
+        string nome
+        string endereco
+        string telefone
+        string email
+    }
+
+    ANIMAL {
+        int id_animal PK
+        string nome
+        string especie
+        string raca
+        int idade
+        string condicao_chegada
+        string tipo_racao
+        string habitos
+        int id_cliente FK
+    }
+
+    VETERINARIO {
+        int id_veterinario PK
+        string nome
+        string especialidade
+        string telefone
+    }
+
+    AGENDA {
+        int id_agenda PK
+        datetime data_hora
+        int id_animal FK
+        int id_veterinario FK
+    }
+
+    PRONTUARIO {
+        int id_prontuario PK
+        int id_animal FK
+        string observacoes
+    }
+
+    RECEITA {
+        int id_receita PK
+        int id_animal FK
+        string descricao
+        datetime data_emissao
+    }
+
+    ATENDENTE {
+        int id_atendente PK
+        string nome
+        string telefone
+    }
+
+    CONTAS_PAGAR {
+        int id_contas_pagar PK
+        decimal valor
+        datetime data_pagamento
+        string forma_pagamento
+        int id_cliente FK
+    }
+
+    ANIMAIS_ADOCAO {
+        int id_animal_adocao PK
+        string nome
+        string especie
+        string raca
+        int idade
+    }
+
+    PRODUTO {
+        int id_produto PK
+        string nome
+        decimal preco
+    }
+
+    HOTEL {
+        int id_hotel PK
+        string nome
+        int id_animal FK
+    }
+
+    CLIENTE ||--o{ ANIMAL : "possui"
+    ANIMAL ||--o{ AGENDA : "agendado_para"
+    VETERINARIO ||--o{ AGENDA : "atende"
+    ANIMAL ||--o{ PRONTUARIO : "possui"
+    ANIMAL ||--o{ RECEITA : "recebe"
+    ATENDENTE ||--o{ CONTAS_PAGAR : "processa"
+    CLIENTE ||--o{ CONTAS_PAGAR : "realiza"
+    ANIMAL }|..|{ VETERINARIO : "atendido_por"
+    ANIMAIS_ADOCAO }|--|{ CLIENTE : "adotado_por"
+    CLIENTE ||--o{ HOTEL : "hospeda"
+    PRODUTO ||--o{ HOTEL : "oferece"
+
+
+
+
+```
 
 
 # 3. Diagrama de casos de uso
