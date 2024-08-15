@@ -42,7 +42,6 @@ Nome da clínica: cachorro amarelo.
 
 
 ```mermaid
-
 erDiagram
     CLIENTE {
         int id_cliente PK
@@ -136,10 +135,6 @@ erDiagram
     ANIMAIS_ADOCAO }|--|{ CLIENTE : "adotado_por"
     CLIENTE ||--o{ HOTEL : "hospeda"
     PRODUTO ||--o{ HOTEL : "oferece"
-
-
-
-
 ```
 
 
@@ -153,37 +148,71 @@ erDiagram
 # 4. Principais telas do sistema
 
 
-![]()
 
 # 5. Arquitetura do sistema
 
 
-![]()
+## 5.1. System Context (C4Context)
 
 ```mermaid
-C4Context
-    title Sistema da Clínica Veterinária - Diagrama de Contexto
-    
-    Person(Cliente, "Cliente", "Proprietário de animais que utiliza os serviços da clínica.")
-    Person(Veterinario, "Veterinário", "Profissional que realiza o atendimento aos animais.")
-    Person(Atendente, "Atendente", "Recepciona e organiza o atendimento na clínica.")
-    Person(Gerente, "Gerente", "Responsável pela administração da clínica.")
-    Person(Secretaria, "Secretária", "Gerencia as contas a pagar da clínica.")
-    
-    System(SistemaClinica, "Sistema da Clínica Veterinária", "Permite o gerenciamento de animais, clientes, agendamentos e pagamentos.")
+graph TD
+    Cliente -->|Interage com| SistemaClinicaVeterinaria
+    Veterinario -->|Acessa dados e atualiza| SistemaClinicaVeterinaria
+    Atendente -->|Gerencia a fila e agenda| SistemaClinicaVeterinaria
+    Gerente -->|Consulta relatórios| SistemaClinicaVeterinaria
+    Secretaria -->|Gerencia contas| SistemaClinicaVeterinaria
+    SubSistemaFinanceiro -->|Interage com| SistemaClinicaVeterinaria
+    SubSistemaAgenda -->|Interage com| SistemaClinicaVeterinaria
 
-    System_Ext(SubSistemaFinanceiro, "SubSistema Financeiro", "Sistema externo para processamento de pagamentos.")
-    System_Ext(SubSistemaAgenda, "SubSistema de Agenda", "Sistema externo para gerenciamento de agendamentos.")
+    SistemaClinicaVeterinaria["Sistema da Clínica Veterinária"] -->|Registra Pagamentos| SubSistemaFinanceiro
+    SistemaClinicaVeterinaria -->|Verifica Disponibilidade| SubSistemaAgenda
+
     
-    Cliente --> SistemaClinica : "Cadastra-se e agenda atendimentos"
-    Veterinario --> SistemaClinica : "Consulta e atualiza informações dos animais"
-    Atendente --> SistemaClinica : "Gerencia fila, agenda e atendimento"
-    Gerente --> SistemaClinica : "Consulta relatórios e informações administrativas"
-    Secretaria --> SistemaClinica : "Gerencia contas a pagar"
-    
-    SistemaClinica --> SubSistemaFinanceiro : "Processa pagamentos"
-    SistemaClinica --> SubSistemaAgenda : "Verifica disponibilidade de agenda"
+```
+
+## 5.2. Container diagram (C4Container)
+
+
+```mermaid
+graph TD
+    subgraph WebServer
+        AplicacaoAtendente["Aplicação do Atendente"]
+        AplicacaoVeterinario["Aplicação do Veterinário"]
+        AplicacaoGerente["Aplicação do Gerente"]
+    end
+
+    subgraph BancoDeDados
+        BDAnimais["BD de Animais"]
+        BDClientes["BD de Clientes"]
+        BDAgendamentos["BD de Agendamentos"]
+        BDProntuarios["BD de Prontuários"]
+        BDProdutos["BD de Produtos"]
+        BDPagamentos["BD de Pagamentos"]
+    end
+
+    AplicacaoAtendente -->|Consulta e Atualiza| BDClientes
+    AplicacaoAtendente -->|Consulta| BDAgendamentos
+    AplicacaoAtendente -->|Atualiza| BDAnimais
+
+    AplicacaoVeterinario -->|Consulta| BDAnimais
+    AplicacaoVeterinario -->|Atualiza| BDProntuarios
+
+    AplicacaoGerente -->|Consulta| BDPagamentos
+    AplicacaoGerente -->|Consulta| BDClientes
+    AplicacaoGerente -->|Consulta| BDAnimais
+    AplicacaoGerente -->|Consulta| BDProdutos
+
+    BDClientes --> BDAnimais
+    BDAgendamentos --> BDAnimais
+
+```
+
+## 5.3. Component diagram (C4Component)
+
+
+```
+
 ```
 
 
-....
+
