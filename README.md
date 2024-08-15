@@ -160,4 +160,30 @@ erDiagram
 
 ![]()
 
+```mermaid
+C4Context
+    title Sistema da Clínica Veterinária - Diagrama de Contexto
+    
+    Person(Cliente, "Cliente", "Proprietário de animais que utiliza os serviços da clínica.")
+    Person(Veterinario, "Veterinário", "Profissional que realiza o atendimento aos animais.")
+    Person(Atendente, "Atendente", "Recepciona e organiza o atendimento na clínica.")
+    Person(Gerente, "Gerente", "Responsável pela administração da clínica.")
+    Person(Secretaria, "Secretária", "Gerencia as contas a pagar da clínica.")
+    
+    System(SistemaClinica, "Sistema da Clínica Veterinária", "Permite o gerenciamento de animais, clientes, agendamentos e pagamentos.")
+
+    System_Ext(SubSistemaFinanceiro, "SubSistema Financeiro", "Sistema externo para processamento de pagamentos.")
+    System_Ext(SubSistemaAgenda, "SubSistema de Agenda", "Sistema externo para gerenciamento de agendamentos.")
+    
+    Cliente --> SistemaClinica : "Cadastra-se e agenda atendimentos"
+    Veterinario --> SistemaClinica : "Consulta e atualiza informações dos animais"
+    Atendente --> SistemaClinica : "Gerencia fila, agenda e atendimento"
+    Gerente --> SistemaClinica : "Consulta relatórios e informações administrativas"
+    Secretaria --> SistemaClinica : "Gerencia contas a pagar"
+    
+    SistemaClinica --> SubSistemaFinanceiro : "Processa pagamentos"
+    SistemaClinica --> SubSistemaAgenda : "Verifica disponibilidade de agenda"
+```
+
+
 ....
