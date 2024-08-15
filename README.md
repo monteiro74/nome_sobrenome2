@@ -155,18 +155,26 @@ erDiagram
 ## 5.1. System Context (C4Context)
 
 ```mermaid
-graph TD
-    Cliente -->|Interage com| SistemaClinicaVeterinaria
-    Veterinario -->|Acessa dados e atualiza| SistemaClinicaVeterinaria
-    Atendente -->|Gerencia a fila e agenda| SistemaClinicaVeterinaria
-    Gerente -->|Consulta relatórios| SistemaClinicaVeterinaria
-    Secretaria -->|Gerencia contas| SistemaClinicaVeterinaria
-    SubSistemaFinanceiro -->|Interage com| SistemaClinicaVeterinaria
-    SubSistemaAgenda -->|Interage com| SistemaClinicaVeterinaria
+%%{init: {"theme": "default"}}%%
+graph TB
+    Cliente[Cliente]
+    Atendente[Atendente]
+    Veterinario[Veterinário]
+    Secretária[Secretária]
+    Gerente[Gerente]
+    AplicacaoAtendente[Aplicação Atendente]
+    AplicacaoVeterinario[Aplicação Veterinário]
+    AplicacaoGerente[Aplicação Gerente]
+    Clínica[Clínica Veterinária]
 
-    SistemaClinicaVeterinaria["Sistema da Clínica Veterinária"] -->|Registra Pagamentos| SubSistemaFinanceiro
-    SistemaClinicaVeterinaria -->|Verifica Disponibilidade| SubSistemaAgenda
-
+    Cliente -->|Marcar horário| AplicacaoAtendente
+    AplicacaoAtendente -->|Verifica agenda| Clínica
+    AplicacaoAtendente -->|Leva cliente e animal| Veterinario
+    Veterinario -->|Entrevista e exame| AplicacaoVeterinario
+    Veterinario -->|Registro em prontuário| AplicacaoVeterinario
+    AplicacaoVeterinario -->|Geração de receita| Clínica
+    Secretária -->|Controle de contas a pagar| Clínica
+    AplicacaoGerente -->|Gerenciamento da clínica| Clínica
     
 ```
 
@@ -174,43 +182,49 @@ graph TD
 
 
 ```mermaid
-graph TD
-    subgraph WebServer
-        AplicacaoAtendente["Aplicação do Atendente"]
-        AplicacaoVeterinario["Aplicação do Veterinário"]
-        AplicacaoGerente["Aplicação do Gerente"]
+%%{init: {"theme": "default"}}%%
+graph TB
+    subgraph "Clínica Veterinária"
+        AplicacaoAtendente[Aplicação Atendente]
+        AplicacaoVeterinario[Aplicação Veterinário]
+        AplicacaoGerente[Aplicação Gerente]
+        Sistema[Sistema Central]
+        
+        AplicacaoAtendente -->|Marca horário| Sistema
+        AplicacaoVeterinario -->|Consulta dados| Sistema
+        AplicacaoGerente -->|Gerencia clínica| Sistema
     end
-
-    subgraph BancoDeDados
-        BDAnimais["BD de Animais"]
-        BDClientes["BD de Clientes"]
-        BDAgendamentos["BD de Agendamentos"]
-        BDProntuarios["BD de Prontuários"]
-        BDProdutos["BD de Produtos"]
-        BDPagamentos["BD de Pagamentos"]
-    end
-
-    AplicacaoAtendente -->|Consulta e Atualiza| BDClientes
-    AplicacaoAtendente -->|Consulta| BDAgendamentos
-    AplicacaoAtendente -->|Atualiza| BDAnimais
-
-    AplicacaoVeterinario -->|Consulta| BDAnimais
-    AplicacaoVeterinario -->|Atualiza| BDProntuarios
-
-    AplicacaoGerente -->|Consulta| BDPagamentos
-    AplicacaoGerente -->|Consulta| BDClientes
-    AplicacaoGerente -->|Consulta| BDAnimais
-    AplicacaoGerente -->|Consulta| BDProdutos
-
-    BDClientes --> BDAnimais
-    BDAgendamentos --> BDAnimais
+    
+    Sistema -->|Armazena e processa dados| BancoDeDados[Banco de Dados]
+    
+    BancoDeDados -->|Armazena informações| Cliente
+    BancoDeDados -->|Armazena informações| Animal
+    BancoDeDados -->|Armazena informações| Veterinario
+    BancoDeDados -->|Armazena informações| Agenda
+    BancoDeDados -->|Armazena informações| Receita
+    BancoDeDados -->|Armazena informações| ContasPagar
 
 ```
 
 ## 5.3. Component diagram (C4Component)
 
 
-```
+```mermaid
+%%{init: {"theme": "default"}}%%
+graph TB
+    subgraph "Aplicação Atendente"
+        AtendenteUI[Interface do Atendente]
+        Agendamento[Modulo de Agendamento]
+        FilaEspera[Modulo de Fila de Espera]
+        VerificacaoAgenda[Modulo de Verificação de Agenda]
+        
+        AtendenteUI -->|Usuário Interage| Agendamento
+        AtendenteUI -->|Usuário Interage| FilaEspera
+        AtendenteUI -->|Usuário Interage| VerificacaoAgenda
+        Agendamento -->|Marca horário| Sistema
+        FilaEspera -->|Gerencia fila| Sistema
+        VerificacaoAgenda -->|Verifica disponibilidade| Sistema
+    end
 
 ```
 
